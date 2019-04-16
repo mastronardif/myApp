@@ -8,35 +8,84 @@ using MongoDB.Bson.IO;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Newtonsoft.Json.Linq;
+using myApp.Models;
+using Serilog;
+using Serilog.Events;
 
 namespace myApp
 {
     class Program
     {
         static IConfiguration config;
-        static IMongoClient _client;  
-        static IMongoDatabase _database;
+        //static IMongoClient _client;  
+        //static IMongoDatabase _database;
         static void Main(string[] args)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
+            try 
+            {
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+                config = configuration;
 
-            var configuration = builder.Build();
-              config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", true, true)
-                .Build();
+                //var configuration = builder.Build();
+                // config = new ConfigurationBuilder()
+                //     .AddJsonFile("appsettings.json", true, true)
+                //     .Build();
 
-            Console.WriteLine("The current time is " + DateTime.Now);
+            var Log = new LoggerConfiguration()
+                //.MinimumLevel.Information()
+                //.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                //.WriteTo.Console()
+                //.WriteTo.RollingFile("log-{Date}.txt") //, fileSizeLimitBytes: 123)    
+                .ReadFrom.Configuration(configuration)  
+                //.ReadFrom.Configuration(config)     
+                //.Enrich.FromLogContext()     
+                .CreateLogger();
 
-            MainAsync().Wait();
-            showVitals();
+                Log.Information("Hello, world!");
+                Console.WriteLine("The current time is " + DateTime.Now);
+                showVitals();            
 
+                //listStudents();
+                ListCollectionAsync().Wait();               
            
-            //Console.ReadLine();
+                //Console.ReadLine();
+                Log.Fatal("Host FFFFFFFFFFFFFFF terminated unexpectedly");
+                Log.Information("Host IIIIIIIIIIII");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                Log.Fatal(ex, "Host terminated unexpectedly");
+                return;
+            }  
+            finally
+            {
+                Log.Information("Fulsh");
+                Log.CloseAndFlush();
+            }          
         }
 
-        static async Task MainAsync()
+        static void showList(List<Models.MyStudent> list)
+        {
+            foreach (Models.MyStudent it in list)
+            {
+                Console.WriteLine(it.name);
+            }
+
+            // find
+               // Find items where name contains "seat".
+        Console.WriteLine("\nFind: xxx where name contains \"Ram\": {0}", 
+            list.Find(x => x.name.Contains("Ram")));
+
+        Console.WriteLine("\nExists: Part with Id=44: {0}", 
+            list.Exists(x => x.id == 44));
+        }
+
+        static async Task ListCollectionAsync()
         {
             //mongodb://<dbuser>:<dbpassword>@ds057254.mlab.com:57254/rdicode
             //mongodb://mastronardif:fm123456>@ds057254.mlab.com:57254/rdicode
@@ -50,7 +99,6 @@ namespace myApp
 
             IMongoDatabase db = client.GetDatabase("rdicode");
             var myColl = config["MyCollection"];
-
             var collection = db.GetCollection<BsonDocument>(myColl);
             //Console.WriteLine($"COUNT= {collection.Count("")}");
 
@@ -89,6 +137,21 @@ MongoCursor<BsonDocument> cursor = collection.Find(query);
             //
         }
 
+        static void listStudents()
+        {
+            List<Models.MyStudent> list = new List<Models.MyStudent>() {
+                    new Models.MyStudent() { id = 1, name = "John" },
+                    new Models.MyStudent() { id = 2, name = "Ellen" },
+                    new Models.MyStudent() { id = 3, name = "John" },
+                    new Models.MyStudent() { id = 44, name = "John" },
+                    new Models.MyStudent() { id = 52, name = "Steve" },
+                    new Models.MyStudent() { id = 63, name = "Bill" },
+                    new Models.MyStudent() { id = 73, name = "Bill" },
+                    new Models.MyStudent() { id = 84, name = "Ram" },
+                    new Models.MyStudent() { id = 95, name = "Ron" }
+                };
+            showList(list);
+        }
         static void showVitals()
         {
             Console.WriteLine($" Hello { config["name"] } !");

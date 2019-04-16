@@ -1,0 +1,14 @@
+2019-04-15 20:10:06.365 -04:00 [Fatal] Host FFFFFFFFFFFFFFF terminated unexpectedly
+2019-04-15 20:10:06.485 -04:00 [Information] Host IIIIIIIIIIII
+2019-04-15 20:13:26.698 -04:00 [Fatal] Host FFFFFFFFFFFFFFF terminated unexpectedly
+2019-04-15 20:13:26.777 -04:00 [Information] Host IIIIIIIIIIII
+2019-04-15 20:13:26.777 -04:00 [Information] Fulsh
+2019-04-15 20:13:38.382 -04:00 [Fatal] Host FFFFFFFFFFFFFFF terminated unexpectedly
+2019-04-15 20:13:38.521 -04:00 [Information] Host IIIIIIIIIIII
+2019-04-15 20:13:38.522 -04:00 [Information] Fulsh
+2019-04-15 20:13:49.310 -04:00 [Fatal] Host FFFFFFFFFFFFFFF terminated unexpectedly
+2019-04-15 20:13:49.355 -04:00 [Information] Host IIIIIIIIIIII
+2019-04-15 20:13:49.355 -04:00 [Information] Fulsh
+2019-04-15 21:52:47.707 -04:00 [Information] Hello, world!
+2019-04-15 21:52:50.962 -04:00 [Fatal] Host FFFFFFFFFFFFFFF terminated unexpectedly
+2019-04-15 21:52:50.962 -04:00 [Information] Host IIIIIIIIIIII
