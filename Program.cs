@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using myApp.Models;
 using Serilog;
 using Serilog.Events;
+using Serilog.Sinks.SumoLogic;
 
 namespace myApp
 {
@@ -34,6 +35,8 @@ namespace myApp
                 //     .AddJsonFile("appsettings.json", true, true)
                 //     .Build();
 
+// File logger
+/*
             var Log = new LoggerConfiguration()
                 //.MinimumLevel.Information()
                 //.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
@@ -44,8 +47,19 @@ namespace myApp
                 //.ReadFrom.Configuration(config)     
                 //.Enrich.FromLogContext()     
                 .CreateLogger();
+ */
+ /* 
+            var Log = new LoggerConfiguration()
+            .WriteTo.SumoLogic("https://endpoint4.collection.us2.sumologic.com/receiver/v1/http/ZaVnC4dhaV1OJMaHi0tURR0qnAZ2G4CmmLdC4MdjYUbmtlFDnp5jAd9h4z0AbkVsIYNHswsCLX87SsDb9hZsW_aY6umdGIQOjPoNMeoUflRQlGL4q6LYVQ==")
+                //.WriteTo.SumoLogic("http://localhost", textFormatter: new MessageTemplateTextFormatter("FOOBAR", null))
+                .CreateLogger();
+*/
+            // From appsettings.json
+            var Log = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();                
 
-                Log.Information("Hello, world!");
+                Log.Information("FxM33 Hello, world!");
                 Console.WriteLine("The current time is " + DateTime.Now);
                 showVitals();            
 
@@ -53,7 +67,14 @@ namespace myApp
                 ListCollectionAsync().Wait();               
            
                 //Console.ReadLine();
-                Log.Fatal("Host FFFFFFFFFFFFFFF terminated unexpectedly");
+                Log.Verbose("VVVVVVVV Verbose");
+                Log.Debug(  "DDDDDDDD Debug");
+                Log.Debug(  "IIIIIIII Information");
+                Log.Warning("WWWWWWWW Warning");
+                Log.Fatal(  "FFFFFFFF Fatal terminated unexpectedly");
+                Log.Error(  "EEEEEEEE Error");
+
+
                 Log.Information("Host IIIIIIIIIIII");
             }
             catch (Exception ex)
