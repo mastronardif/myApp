@@ -55,21 +55,35 @@ namespace myApp
                 .CreateLogger();
 */
             // From appsettings.json
+            /**
             var Log = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
-                .CreateLogger();                
+                .CreateLogger();   
+**/
+                // basic usage defaults to writing to `log` collection
+var Log = new LoggerConfiguration()
+    //.WriteTo.MongoDB("mongodb://mymongodb/logs")
+    .WriteTo.MongoDB("mongodb://localhost:27017/logs")
+    .CreateLogger();             
 
-                Log.Information("FxM33 Hello, world!");
+int nsecs = 6000;
+Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); // Wait 2 seconds with blocking
+
+                //Log.Information("FxM34 Hello, world!");
                 Console.WriteLine("The current time is " + DateTime.Now);
-                showVitals();            
+                //showVitals();            
 
                 //listStudents();
-                ListCollectionAsync().Wait();               
+                //ListCollectionAsync().Wait();               
            
                 //Console.ReadLine();
                 Log.Verbose("VVVVVVVV Verbose");
+                
+                Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); // Wait 2 seconds with blocking
                 Log.Debug(  "DDDDDDDD Debug");
+Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); // Wait 2 seconds with blocking
                 Log.Debug(  "IIIIIIII Information");
+Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); // Wait 2 seconds with blocking                
                 Log.Warning("WWWWWWWW Warning");
                 Log.Fatal(  "FFFFFFFF Fatal terminated unexpectedly");
                 Log.Error(  "EEEEEEEE Error");
