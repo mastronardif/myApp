@@ -63,13 +63,18 @@ namespace myApp
                 // basic usage defaults to writing to `log` collection
 var Log = new LoggerConfiguration()
     //.WriteTo.MongoDB("mongodb://mymongodb/logs")
-    .WriteTo.MongoDB("mongodb://localhost:27017/logs")
+    //.WriteTo.MongoDB("mongodb://localhost:27017/logs")
+    .WriteTo.MongoDBCapped("mongodb://localhost:27017/logs", cappedMaxSizeMb: 50, cappedMaxDocuments: 7)
+    .MinimumLevel.Verbose()    
+    //.MinimumLevel.Fatal()    
     .CreateLogger();             
 
 int nsecs = 6000;
 Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); // Wait 2 seconds with blocking
 
-                //Log.Information("FxM34 Hello, world!");
+                Log.Information("FxM35 Hello, world!");
+                Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); // Wait 2 seconds with blocking
+                Log.Information("FxM35 AAAAAAAAAAAAAAAAAAAAA");
                 Console.WriteLine("The current time is " + DateTime.Now);
                 //showVitals();            
 
@@ -82,14 +87,17 @@ Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); //
                 Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); // Wait 2 seconds with blocking
                 Log.Debug(  "DDDDDDDD Debug");
 Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); // Wait 2 seconds with blocking
-                Log.Debug(  "IIIIIIII Information");
+                Log.Information(  "IIIIIIII Information");
 Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); // Wait 2 seconds with blocking                
                 Log.Warning("WWWWWWWW Warning");
                 Log.Fatal(  "FFFFFFFF Fatal terminated unexpectedly");
                 Log.Error(  "EEEEEEEE Error");
+                Log.Verbose("VVVVVVVV Error");
 
 
                 Log.Information("Host IIIIIIIIIIII");
+                Console.WriteLine($"'waiting {nsecs} milli secs. The end is near."); Task.Delay(nsecs).Wait(); // Wait 2 seconds with blocking                
+
             }
             catch (Exception ex)
             {
