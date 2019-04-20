@@ -12,6 +12,7 @@ using myApp.Models;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SumoLogic;
+using System.Diagnostics;
 
 namespace myApp
 {
@@ -34,6 +35,8 @@ namespace myApp
                 // config = new ConfigurationBuilder()
                 //     .AddJsonFile("appsettings.json", true, true)
                 //     .Build();
+Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
+Serilog.Debugging.SelfLog.Enable(Console.Error);
 
 // File logger
 /*
@@ -52,24 +55,27 @@ namespace myApp
             var Log = new LoggerConfiguration()
             .WriteTo.SumoLogic("https://endpoint4.collection.us2.sumologic.com/receiver/v1/http/ZaVnC4dhaV1OJMaHi0tURR0qnAZ2G4CmmLdC4MdjYUbmtlFDnp5jAd9h4z0AbkVsIYNHswsCLX87SsDb9hZsW_aY6umdGIQOjPoNMeoUflRQlGL4q6LYVQ==")
                 //.WriteTo.SumoLogic("http://localhost", textFormatter: new MessageTemplateTextFormatter("FOOBAR", null))
+                .WriteTo.MongoDBCapped()
                 .CreateLogger();
-*/
+    */
             // From appsettings.json
-            /**
+      
             var Log = new LoggerConfiguration()
-                .ReadFrom.Configuration(configuration)
+                .ReadFrom.Configuration(configuration)                
                 .CreateLogger();   
-**/
-                // basic usage defaults to writing to `log` collection
+
+        /**
 var Log = new LoggerConfiguration()
     //.WriteTo.MongoDB("mongodb://mymongodb/logs")
-    //.WriteTo.MongoDB("mongodb://localhost:27017/logs")
-    .WriteTo.MongoDBCapped("mongodb://localhost:27017/logs", cappedMaxSizeMb: 50, cappedMaxDocuments: 7)
+    .WriteTo.MongoDB("mongodb://localhost:27017/logs")
+    //.WriteTo.MongoDBCapped("mongodb://localhost:27017/logs", cappedMaxSizeMb: 50, cappedMaxDocuments: 7)
     .MinimumLevel.Verbose()    
     //.MinimumLevel.Fatal()    
     .CreateLogger();             
+**/
+   
 
-int nsecs = 6000;
+int nsecs = 1000;
 Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); // Wait 2 seconds with blocking
 
                 Log.Information("FxM35 Hello, world!");
@@ -96,6 +102,7 @@ Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); //
 
 
                 Log.Information("Host IIIIIIIIIIII");
+                nsecs  =6000;
                 Console.WriteLine($"'waiting {nsecs} milli secs. The end is near."); Task.Delay(nsecs).Wait(); // Wait 2 seconds with blocking                
 
             }
