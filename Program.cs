@@ -19,10 +19,10 @@ namespace myApp
     class Program
     {
         static IConfiguration config;
-        //static IMongoClient _client;  
-        //static IMongoDatabase _database;
+        static Serilog.Core.Logger Log = null;
         static void Main(string[] args)
-        {
+        {            
+            int nsecs = 1000;
             try 
             {
                 var configuration = new ConfigurationBuilder()
@@ -35,8 +35,8 @@ namespace myApp
                 // config = new ConfigurationBuilder()
                 //     .AddJsonFile("appsettings.json", true, true)
                 //     .Build();
-Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
-Serilog.Debugging.SelfLog.Enable(Console.Error);
+//Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
+//Serilog.Debugging.SelfLog.Enable(Console.Error);
 
 // File logger
 /*
@@ -60,7 +60,7 @@ Serilog.Debugging.SelfLog.Enable(Console.Error);
     */
             // From appsettings.json
       
-            var Log = new LoggerConfiguration()
+            Log = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)                
                 .CreateLogger();   
 
@@ -73,19 +73,12 @@ var Log = new LoggerConfiguration()
     //.MinimumLevel.Fatal()    
     .CreateLogger();             
 **/
-   
 
-int nsecs = 1000;
-Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); // Wait 2 seconds with blocking
+                //Console.WriteLine("The current time is " + DateTime.Now);
+                showVitals();            
 
-                Log.Information("FxM35 Hello, world!");
-                Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); // Wait 2 seconds with blocking
-                Log.Information("FxM35 AAAAAAAAAAAAAAAAAAAAA");
-                Console.WriteLine("The current time is " + DateTime.Now);
-                //showVitals();            
-
-                //listStudents();
-                //ListCollectionAsync().Wait();               
+                listStudents();
+                ListCollectionAsync().Wait();               
            
                 //Console.ReadLine();
                 Log.Verbose("VVVVVVVV Verbose");
@@ -108,15 +101,18 @@ Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); //
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                Log.Fatal(ex, "Host terminated unexpectedly");
-                return;
+                Console.WriteLine($"\n\n catch catch\n{ex}");
+                if (Log != null) { Log.Fatal($"catch catch\n {ex}"); }
+                //return;
             }  
             finally
             {
-                Log.Information("Fulsh");
-                Log.CloseAndFlush();
-            }          
+                if (Log != null) { Log.Information("Fulsh"); }
+                //Log.Information("Fulsh");
+                //Log.CloseAndFlush();
+            }      
+
+            Console.WriteLine($"'waiting {nsecs} milli secs. The end is near."); Task.Delay(nsecs).Wait(); // Wait 2 seconds with blocking                    
         }
 
         static void showList(List<Models.MyStudent> list)
@@ -130,6 +126,8 @@ Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); //
                // Find items where name contains "seat".
         Console.WriteLine("\nFind: xxx where name contains \"Ram\": {0}", 
             list.Find(x => x.name.Contains("Ram")));
+
+            //throw new Exception("FM man made exception!!!!");
 
         Console.WriteLine("\nExists: Part with Id=44: {0}", 
             list.Exists(x => x.id == 44));
@@ -170,14 +168,13 @@ Console.WriteLine($"'waiting {nsecs} milli secs."); Task.Delay(nsecs).Wait(); //
             //var filter = new BsonDocument("user.givenName: Frank");
             var filter = Builders<BsonDocument>.Filter.Eq("user.username", "fxm");
             var result = collection.Find(filter).ToList();
-           //await collection.Find(filter).ForEachAsync(document => Console.WriteLine(document));
+            //await collection.Find(filter).ForEachAsync(document => Console.WriteLine(document));
 
-           var filter2 = new BsonDocument("cardId", "bk101");
+            var filter2 = new BsonDocument("cardId", "bk101");
+            await collection.Find(filter2)
+            .ForEachAsync(document => Console.WriteLine(document));
 
-await collection.Find(filter2)
-         .ForEachAsync(document => Console.WriteLine(document));
-
- Console.WriteLine("\n2222222222222222222222222222\n\n");
+            //Console.WriteLine("\n2222222222222222222222222222\n\n");
 
             /*
 var collection2 = db.GetCollection<BsonDocument>("users");
